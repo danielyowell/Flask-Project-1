@@ -1,25 +1,26 @@
 from flask import Flask 
+from flask import url_for
 from markupsafe import escape
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    return "Hello! This is the main page <h1>HELLO!<h1>"
+@app.route('/')
+def index():
+    return 'index'
 
-@app.route("/<name>")
-def hello(name):
-    # swapping escape(name) for x generates an alert. escape() is our security function
-    # x = "<script>alert(\"uh oh, security breach\")</script>"
-    return f"Hello, {escape(name)}!"
+@app.route('/login')
+def login():
+    return 'login'
 
-@app.route('/projects/')
-def projects():
-    return 'The project page'
+@app.route('/user/<username>')
+def profile(username):
+    return f'{username}\'s profile'
 
-@app.route('/about')
-def about():
-    return 'The about page'
+with app.test_request_context():
+    print(url_for('index'))
+    print(url_for('login'))
+    print(url_for('login', next='/'))
+    print(url_for('profile', username='John Doe'))
 
 if __name__ == "__main__":
     app.run()
